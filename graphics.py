@@ -82,6 +82,7 @@ class Char_map():
             xoffset += 1
 
 
+
     def draw_line(self, cd1 : list, cd2 : list, char = '*') -> None:
         '''
         Draws a line from cd1 to cd2

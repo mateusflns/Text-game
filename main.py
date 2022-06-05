@@ -5,7 +5,6 @@ from random import randrange
 
 os.system('cls')
 os.system('mode con:cols=160 lines=60')
-import time
 
 tsize = os.get_terminal_size()
 tsize = [tsize.columns, tsize.lines]
