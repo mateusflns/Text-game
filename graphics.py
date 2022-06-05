@@ -1,10 +1,6 @@
 CURSOR_UP = '\033[1A'
 CLEAR_LINE = '\x1b[2K'
-# matrix for drawing rectangles
-RECT_M = [[[1,1],[1,2]], 
-        [[1,2],[2,2]],
-        [[2,2],[1,2]],
-        [[1,2],[1,1]],]
+
 
 
 class Char_map():
@@ -93,41 +89,45 @@ class Char_map():
         '''
         x1, y1 = cd1
         x2, y2 = cd2
+        dx = abs(x2 - x1)
+        dy = -abs(y2 - y1)
+        if x1 < x2: sx = 1 
+        else : sx = -1
+        if y1 < y2: sy = 1 
+        else : sy = -1
+        error = dx + dy
 
-        # X and Y difference
-        dy = y2 - y1
-        dx = x2 - x1
+        while True:
+            self.change_char(x1, y1, char)
+            if x1 == x2 and y1 == y2: 
+                break
+            error2 = error * 2
+            if error2 >= dy:
+                if x1 == x2 :
+                    break
+                error += dy
+                x1 += sx
+            elif error2 <= dx:
+                if y1 == y2 :
+                    break
+                error += dx
+                y1 += sy
         
-        # slope direction
-        yi = 1
-        
-        # if the slope is negative, invert the direction
-        if dy < 0:
-            dy = -dy
-            yi = -1
-        
-        d = (2 * dy) - dx
-        y = y1
-
-        for x in range(x1,x2+1):
-            # if error is higher than 0, add 1 to y 
-            if d > 0:
-                y = y + yi
-                d = d + (2 * (dy - dx))
-            else:
-                d = d + 2*dy
-
-            self.change_char(x,y,char)
-
 
     def draw_rectangle(self, cd1 : list, cd2 : list, char = '*') -> None:
         '''
         Draws a rectangle from cd1 to cd2
         '''
-        
-        for i in range(4):
-           self.draw_line(RECT_M[i][0], RECT_M[i][1], char)
-        
+        #drawing all lines
+        self.draw_polyline([cd1, [cd1[0], cd2[1]], cd2, [cd2[0], cd1[1]], cd1], char)
+
+
+    def draw_polyline(self, coords : list, char = '*') -> None:
+        '''
+        Draws a polyline from coords
+        '''
+        for i in range(len(coords)-1):
+            self.draw_line(coords[i], coords[i+1], char)
 
 
     # char manipulation
