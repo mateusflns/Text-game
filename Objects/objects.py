@@ -1,16 +1,21 @@
-
-
-
-from typing import List
-
-
 class Obj:
-    def __init__(self, x, y, sprite_path, graphic_engine, bbox = []):
+    def __init__(self, x, y, graphic_engine, sprite_path = '', bbox = []):
+        if sprite_path:
+            self.sprite_path = sprite_path
+            self.load_sprite()
+        else:
+            self.sprite = ''
+
+        self.load_coords(x, y, bbox)
+        self.graphic_engine = graphic_engine
+        Engine.instances.append(self)
+        self.id = Engine.instances.index(self)
+        self.create()
+
+
+    def load_coords(self, x, y, bbox = []):
         self.x = x
         self.y = y
-        self.sprite_path = sprite_path
-        self.sprite = []
-        self.load_sprite()
         self.x2 = x + len(self.sprite[0])
         self.y2 = y + len(self.sprite)
         self.sbbox = False
@@ -19,10 +24,6 @@ class Obj:
         else:
             self.sbbox = True
             self.bbox = bbox
-        self.graphic_engine = graphic_engine
-        self.create()
-        Engine.instances.append(self)
-        self.id = Engine.instances.index(self)
 
 
     def update_bbox(self):
@@ -65,7 +66,6 @@ class Obj:
         b2width = bbox2[2] - bbox2[0]
         b2height = bbox2[3] - bbox2[1]
 
-
         if (bbox1[0] < bbox2[0] + b2width and
             bbox1[0] + b1width > bbox2[0] and
             bbox1[1] < bbox2[1] + b2height and
@@ -76,7 +76,8 @@ class Obj:
 
 
     def draw_sprite(self):
-        self.graphic_engine.draw_sprite([self.x, self.y], self.sprite)
+        if self.sprite:
+            self.graphic_engine.draw_sprite([self.x, self.y], self.sprite)
 
 
     def run(self):
@@ -95,44 +96,54 @@ class Obj:
 
 
 class Engine():
-    def __init__(self, graphic_engine):
+    def __init__(self, graphic_engine, tsize, background_sprite = ''):
         Engine.instances = []
+        self.tsize = tsize
         self.graphic_engine = graphic_engine
+        if background_sprite:
+            self.background_sprite = graphic_engine.load_sprite(background_sprite)
 
 
     def run(self):
         self.graphic_engine.clear()
+        self.graphic_engine.draw_rectangle([0,self.tsize[1]-8],[self.tsize[0],self.tsize[1]], '#')
         for obj in Engine.instances:
             obj.run()
             obj.update_bbox()
             obj.draw_sprite()
         self.graphic_engine.draw_map()
 
+    
+
+    def draw_background(self):
+        if self.background_sprite:
+            self.graphic_engine.draw_sprite([0, 0], self.background_sprite)
 
 
-class Player(Obj):
-    def __init__(self, x, y, sprite_path, graphic_engine, bbox = []):
-        Obj.__init__(self, x, y, sprite_path, graphic_engine, bbox)
-
-
-    def run(self):
-        other = self.colision_check(Dummy)
-        if other:
-            self.destroy(other)
-            
-
-
-    def create(self):
-        pass
 
 class Dummy(Obj):
-    def __init__(self, x, y, sprite_path, graphic_engine, bbox = []):
-        Obj.__init__(self, x, y, sprite_path, graphic_engine, bbox)
+    def __init__(self, x, y, graphic_engine, sprite_path = '', bbox = []):
+        Obj.__init__(self, x, y, graphic_engine, sprite_path, bbox)
 
+
+
+class Wall():
+    '''
+    Wall object for colision checking no sprite is drawn
+    '''
+    def __init__(self,bbox = []):
+        '''
+        Only bbox needed since wall is only for colision
+        '''
+        Engine.instances.append(self)
+        self.id = Engine.instances.index(self)
+        self.bbox = bbox
 
     def run(self):
-        pass 
+        pass
 
+    def update_bbox(self):
+        pass
 
-    def create(self):
+    def draw_sprite(self):
         pass

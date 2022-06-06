@@ -1,24 +1,22 @@
 import time
 import os
 from graphics import *
-from objects import *
+from Objects import player, objects
 from random import randrange
-
+from simple_functions import *
 
 os.system('cls')
-os.system('mode con:cols=160 lines=60')
+maximize()
 
 tsize = os.get_terminal_size()
 tsize = [tsize.columns, tsize.lines]
 map = Char_map(tsize[0], tsize[1])
-hsp = 1
-vsp = 1
 coords = [tsize[0]/2, tsize[1]/2]
-engine = Engine(map)
-p1 = Player(int(coords[0]), int(coords[1]), 'sprite_example.txt', map)
-p2 = Dummy(int(coords[0]) + 12, int(coords[1]), 'sprite_example.txt', map)
+engine = objects.Engine(map,tsize)
+p1 = player.Player(int(coords[0]), int(coords[1]), map, 'sprite_exemple.txt')
+objects.Wall([0,tsize[1]-8,tsize[0],tsize[1]])
+#map.change_char(55,5, '@')
 
-for i in range(100):
-    time.sleep(0.3)
-    p1.x += hsp
+while True:
+    time.sleep(0.1)
     engine.run()

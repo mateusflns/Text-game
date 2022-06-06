@@ -133,6 +133,15 @@ class Char_map():
             self.draw_line(coords[i], coords[i+1], char)
 
 
+    def draw_text(self,cds, text : str) -> None:
+        '''
+        Draws text to map
+        '''
+        x, y = cds
+        for i in range(len(text)):
+            self.change_char(x+i, y, text[i])
+
+
     def draw_sprite(self, cds, sprite):
         '''
         Draws a sprite to the map
