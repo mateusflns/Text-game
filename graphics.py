@@ -1,3 +1,6 @@
+
+
+
 CURSOR_UP = '\033[1A'
 CLEAR_LINE = '\x1b[2K'
 
@@ -82,7 +85,6 @@ class Char_map():
             xoffset += 1
 
 
-
     def draw_line(self, cd1 : list, cd2 : list, char = '*') -> None:
         '''
         Draws a line from cd1 to cd2
@@ -123,7 +125,7 @@ class Char_map():
         self.draw_polyline([cd1, [cd1[0], cd2[1]], cd2, [cd2[0], cd1[1]], cd1], char)
 
 
-    def draw_polyline(self, coords : list, char = '*') -> None:
+    def draw_polyline(self, coords : list, char) -> None:
         '''
         Draws a polyline from coords
         '''
@@ -131,13 +133,28 @@ class Char_map():
             self.draw_line(coords[i], coords[i+1], char)
 
 
+    def draw_sprite(self, cds, sprite):
+        '''
+        Draws a sprite to the map
+        '''
+        xoffset = 0
+        yoffset = 0
+        for line in sprite:
+            for char in line:
+                if not char in ' \n':
+                    self.change_char(cds[0]+xoffset, cds[1]+yoffset, char)
+                xoffset += 1
+            yoffset += 1
+            xoffset = 0
+
+
     # char manipulation
     def change_char(self, x : int, y : int, char : str) -> None:    
         '''
         Changes char at x, y to char
         '''
-
-        self.map[y][x] = char
+        if x > 0 and x < self.msize[0] and y > 0 and y < self.msize[1]:
+            self.map[y][x] = char
 
 
 
