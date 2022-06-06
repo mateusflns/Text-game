@@ -15,8 +15,8 @@ hsp = 1
 vsp = 1
 coords = [tsize[0]/2, tsize[1]/2]
 engine = Engine(map)
-p1 = Player(int(coords[0]), int(coords[1]), 'sprite_example.txt', map)
-p2 = Dummy(int(coords[0]) + 12, int(coords[1]), 'sprite_example.txt', map)
+p1 = Player(int(coords[0]), int(coords[1]), 'sprite_exemple.txt', map)
+p2 = Dummy(int(coords[0]) + 12, int(coords[1]), 'sprite_exemple.txt', map)
 
 for i in range(100):
     time.sleep(0.3)
