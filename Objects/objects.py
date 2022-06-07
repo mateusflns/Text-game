@@ -1,3 +1,16 @@
+MAPS = []
+def make_maps(tsize):
+    global MAPS
+    MAPS.append([[[0, tsize[1]-3], [tsize[0], tsize[1]]],
+                 [[14, tsize[1]-8], [17, tsize[1]-5]],
+                 [[22, tsize[1]-15], [32, tsize[1]-13]],
+                 [[33, tsize[1]-12], [44, tsize[1]-10]],
+                 [[45, tsize[1]-11], [53, tsize[1]-9]],
+                 [[62, tsize[1]-12], [64, tsize[1]-10]],
+                 [[69, tsize[1]-12], [71, tsize[1]-10]]])
+
+
+
 class Obj:
     def __init__(self, x, y, graphic_engine, sprite_path = '', bbox = []):
         if sprite_path:
@@ -60,7 +73,7 @@ class Obj:
         if not bbox1:
             bbox1 = self.bbox
 
-
+        
         b1width = bbox1[2] - bbox1[0]
         b1height = bbox1[3] - bbox1[1]
         b2width = bbox2[2] - bbox2[0]
@@ -100,25 +113,30 @@ class Engine():
         Engine.instances = []
         self.tsize = tsize
         self.graphic_engine = graphic_engine
+        make_maps(self.tsize)
+        self.load_background(0)
         if background_sprite:
             self.background_sprite = graphic_engine.load_sprite(background_sprite)
 
 
     def run(self):
         self.graphic_engine.clear()
-        self.graphic_engine.draw_rectangle([0,self.tsize[1]-8],[self.tsize[0],self.tsize[1]], '#')
         for obj in Engine.instances:
             obj.run()
             obj.update_bbox()
             obj.draw_sprite()
+            self.draw_background(0)
         self.graphic_engine.draw_map()
 
-    
 
-    def draw_background(self):
-        if self.background_sprite:
-            self.graphic_engine.draw_sprite([0, 0], self.background_sprite)
+    def draw_background(self, id):
+        for i in MAPS[id]:
+            self.graphic_engine.draw_rectangle(i[0], i[1], '#')
 
+
+    def load_background(self, id):
+        for i in MAPS[id]:
+            Wall([i[0][0], i[0][1], i[1][0], i[1][1]])
 
 
 class Dummy(Obj):
