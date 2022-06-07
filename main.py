@@ -14,7 +14,6 @@ map = Char_map(tsize[0], tsize[1])
 coords = [tsize[0]/2, tsize[1]/2]
 engine = objects.Engine(map,tsize)
 p1 = player.Player(int(coords[0]), int(coords[1]), map, 'sprite_exemple.txt')
-objects.Wall([0,tsize[1]-8,tsize[0],tsize[1]])
 
 
 while True:

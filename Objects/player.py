@@ -18,7 +18,7 @@ class Player(Obj):
         if self.vsp < self.max_grv:
             self.vsp += self.grv
 
-        if get_keys('space'):
+        if get_keys('space') and not self.wall_check('y', [self.bbox[0], self.bbox[1]+(self.bbox[3]-self.bbox[1]), self.bbox[2], self.bbox[3]+1]):
             self.vsp = self.jspd
 
 
@@ -44,17 +44,32 @@ class Player(Obj):
         self.jspd = -3
 
 
-    def wall_check(self, c):
-        if c == 'x':
-            for i in Engine.instances:
-                if isinstance(i, Wall):
-                    if self.colision_check(i.bbox, [self.bbox[0] + self.hsp, self.bbox[1],self.bbox[2] + self.hsp, self.bbox[3]]):
-                        return True
-            return False
+    def wall_check(self, c, bbox = []):
+        if not bbox:
+            if c == 'x':
+                for i in Engine.instances:
+                    if isinstance(i, Wall):
+                        if self.colision_check(i.bbox, [self.bbox[0] + self.hsp, self.bbox[1],self.bbox[2] + self.hsp, self.bbox[3]]):
+                            return True
+                return False
+            else:
+                for i in Engine.instances:
+                    if isinstance(i, Wall):
+                        #print(self.colision_check(i.bbox, [self.bbox[0], self.bbox[1] + int(self.vsp),self.bbox[2], self.bbox[3] + (self.vsp)]))
+                        if self.colision_check(i.bbox, [self.bbox[0], self.bbox[1] + int(self.vsp),self.bbox[2], self.bbox[3] + int(self.vsp)]):
+                            return True
+                return False
         else:
-            for i in Engine.instances:
-                if isinstance(i, Wall):
-                    #print(self.colision_check(i.bbox, [self.bbox[0], self.bbox[1] + int(self.vsp),self.bbox[2], self.bbox[3] + (self.vsp)]))
-                    if self.colision_check(i.bbox, [self.bbox[0], self.bbox[1] + int(self.vsp),self.bbox[2], self.bbox[3] + int(self.vsp)]):
-                        return True
-            return False
+            if c == 'x':
+                for i in Engine.instances:
+                    if isinstance(i, Wall):
+                        if self.colision_check(i.bbox, [self.bbox[0], self.bbox[1],self.bbox[2], self.bbox[3]]):
+                            return True
+                return False
+            else:
+                for i in Engine.instances:
+                    if isinstance(i, Wall):
+                        #print(self.colision_check(i.bbox, [self.bbox[0], self.bbox[1] + int(self.vsp),self.bbox[2], self.bbox[3] + (self.vsp)]))
+                        if self.colision_check(i.bbox, [self.bbox[0], self.bbox[1],self.bbox[2], self.bbox[3]]):
+                            return True
+                return False
