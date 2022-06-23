@@ -15,7 +15,10 @@ coords = [tsize[0]/2, tsize[1]/2]
 engine = objects.Engine(map,tsize)
 p1 = player.Player(int(coords[0]), int(coords[1]), map, 'sprite_exemple.txt')
 
-
+fps = 15
+delay = 1/fps
 while True:
-    time.sleep(0.1)
+    stime = time.time() 
     engine.run()
+    if time.time() - stime < delay:
+        time.sleep(abs(delay - (time.time() - stime)))

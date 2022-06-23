@@ -1,4 +1,4 @@
-from Objects.objects import Obj, Dummy, Wall, Engine
+from Objects.objects import Obj, Wall, Engine
 from Objects.Get_keys import get_keys
 from math import copysign
 
@@ -8,31 +8,24 @@ class Player(Obj):
 
 
     def run(self):
-        if get_keys('D'):
-            move = 1
-        elif get_keys('A'):
-            move = -1
-        else: move = 0
+        # move is 1 or -1 depending on the direction or 0 if not moving
+        move = get_keys('D') - get_keys('A')
         self.hsp = move * self.spd
 
+        # add gravity to vsp if not at max grv
         if self.vsp < self.max_grv:
             self.vsp += self.grv
 
-        if get_keys('space') and not self.wall_check('y', [self.bbox[0], self.bbox[1]+(self.bbox[3]-self.bbox[1]), self.bbox[2], self.bbox[3]+1]):
+        if get_keys('space') and self.colision_check(Wall, [self.bbox[0], self.bbox[3], self.bbox[2], self.bbox[3]+1])[0]:
             self.vsp = self.jspd
+        
+        self.y_colision()
+        self.x_colision()
 
-
-        if self.wall_check('x'):
-            self.hsp = copysign(1, self.hsp)
-            while not self.wall_check('x'):
-                self.x += self.hsp
-            self.hsp = 0
-
-        if self.wall_check('y'):
-            self.vsp = 0
-
-        self.x += self.hsp
-        self.y += int(self.vsp)
+        # change x and y according to hsp and vsp
+        self.move(x = self.x + self.hsp,
+        y = self.y + int(self.vsp))
+        
 
 
     def create(self):
@@ -44,32 +37,51 @@ class Player(Obj):
         self.jspd = -3
 
 
-    def wall_check(self, c, bbox = []):
-        if not bbox:
-            if c == 'x':
-                for i in Engine.instances:
-                    if isinstance(i, Wall):
-                        if self.colision_check(i.bbox, [self.bbox[0] + self.hsp, self.bbox[1],self.bbox[2] + self.hsp, self.bbox[3]]):
-                            return True
-                return False
+    def x_colision(self):
+        # x and y colision could be combined into one function 
+        # but they are separated for better readability
+        if self.hsp:
+            hsp_sign = copysign(1, self.hsp)
+
+            if self.hsp > 0:
+
+                if self.colision_check(Wall, [self.bbox[2],
+                self.bbox[1], self.bbox[2] + self.hsp, self.bbox[3]])[0]:
+
+                    while not self.colision_check(Wall, [self.bbox[2],
+                    self.bbox[1], self.bbox[2] + hsp_sign, self.bbox[3]])[0]:
+
+                        self.move(x = self.x + hsp_sign)
+                        
+                    self.hsp = 0
+
             else:
-                for i in Engine.instances:
-                    if isinstance(i, Wall):
-                        #print(self.colision_check(i.bbox, [self.bbox[0], self.bbox[1] + int(self.vsp),self.bbox[2], self.bbox[3] + (self.vsp)]))
-                        if self.colision_check(i.bbox, [self.bbox[0], self.bbox[1] + int(self.vsp),self.bbox[2], self.bbox[3] + int(self.vsp)]):
-                            return True
-                return False
-        else:
-            if c == 'x':
-                for i in Engine.instances:
-                    if isinstance(i, Wall):
-                        if self.colision_check(i.bbox, [self.bbox[0], self.bbox[1],self.bbox[2], self.bbox[3]]):
-                            return True
-                return False
+
+                if (self.colision_check(Wall, [self.bbox[0] + self.hsp,
+                self.bbox[1], self.bbox[0] , self.bbox[3]])[0]): 
+
+                    while not self.colision_check(Wall, [self.bbox[0] + hsp_sign,
+                    self.bbox[1], self.bbox[0], self.bbox[3]])[0]:
+
+                        self.move(x = self.x + hsp_sign)
+                        
+                    self.hsp = 0
+
+
+    def y_colision(self):
+        if self.vsp:
+            if self.vsp > 0:
+                dir = [0,3,2,3]
             else:
-                for i in Engine.instances:
-                    if isinstance(i, Wall):
-                        #print(self.colision_check(i.bbox, [self.bbox[0], self.bbox[1] + int(self.vsp),self.bbox[2], self.bbox[3] + (self.vsp)]))
-                        if self.colision_check(i.bbox, [self.bbox[0], self.bbox[1],self.bbox[2], self.bbox[3]]):
-                            return True
-                return False
+                dir = [0,1,2,1] 
+
+            vsp_sign = copysign(1, self.vsp)
+
+            if self.colision_check(Wall, [self.bbox[dir[0]] ,
+            self.bbox[dir[1]] + -vsp_sign, self.bbox[dir[2]], self.bbox[dir[3]] + int(self.vsp)+vsp_sign])[0]:
+
+                while not self.colision_check(Wall, [self.bbox[dir[0]] ,
+                self.bbox[dir[1]], self.bbox[dir[2]], self.bbox[dir[3]] + vsp_sign])[0]:
+
+                    self.move(y = self.y + vsp_sign)
+                self.vsp = 0 

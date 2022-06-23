@@ -1,7 +1,9 @@
 MAPS = []
+
 def make_maps(tsize):
     global MAPS
-    MAPS.append([[[0, tsize[1]-3], [tsize[0], tsize[1]]],
+    # colision maps with bbox for drawing and making walls
+    MAPS.append([[[3    , tsize[1]-4], [tsize[0]-64, tsize[1]]-1],
                  [[14, tsize[1]-8], [17, tsize[1]-5]],
                  [[22, tsize[1]-15], [32, tsize[1]-13]],
                  [[33, tsize[1]-12], [44, tsize[1]-10]],
