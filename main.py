@@ -16,7 +16,7 @@ coords = [tsize[0]/2, tsize[1]/2]
 engine = Engine(map,tsize)
 p1 = Snake(0, 0, map, "./Snake/head.txt")
 
-fps = 15
+fps = 7
 delay = 1/fps
 while True:
     stime = time.time() 

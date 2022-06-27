@@ -2,3 +2,4 @@ test.py
 __pycache__/*
 ascii_list.txt
 Objects/__pycache__/*
+Snake/__pycache__/*

@@ -86,6 +86,7 @@ class Obj:
                         return [True, i.id]
             
             return [False, None]
+            
 
         # if bbox 1 is not given use the object's bbox
         if not bbox1:
@@ -125,7 +126,7 @@ class Obj:
         '''
         Destroy the object
         '''
-        Engine.instances.pop(id)
+        Engine.instances.remove(id)
 
 
     def move(self, x = False, y = False) -> None:
