@@ -78,7 +78,6 @@ class Obj:
                 
                 # check if the object is the same as given          check if the object isn't itself
                 objname = str(i).split(' ')[0].split('.')[2]
-
                 if i.__class__.__name__ == objname and i != self:
                     
                     #check for colision     
@@ -151,7 +150,7 @@ class Engine():
         self.graphic_engine = graphic_engine
     
         # size of screen and map loading
-        self.tsize = tsize
+        Engine.tsize = tsize
 
 
     def run(self):
