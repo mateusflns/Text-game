@@ -1,4 +1,4 @@
 test.py
-pycache/
+__pycache__/*
 ascii_list.txt
-Objects/pycache/
+Objects/__pycache__/*

@@ -1,11 +1,6 @@
 
-
-
 CURSOR_UP = '\033[1A'
 CLEAR_LINE = '\x1b[2K'
-
-
-
 class Char_map():
 
 
