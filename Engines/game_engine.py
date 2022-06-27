@@ -80,7 +80,8 @@ class Obj:
                 objname = str(i).split(' ')[0].split('.')[2]
                 if i.__class__.__name__ == objname and i != self:
                     
-                    #check for colision     
+                    #check for colision   
+                     
                     if self.colision_check(i.bbox, bbox1)[0]:
                         return [True, i.id]
             
