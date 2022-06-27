@@ -1,5 +1,5 @@
-from Objects.objects import Obj, Wall, Engine
-from Objects.Get_keys import get_keys
+from Platformer.objects import Obj, Wall, Engine
+from Engines.Get_keys import get_keys
 from math import copysign
 
 class Player(Obj):
