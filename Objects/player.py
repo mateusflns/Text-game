@@ -69,19 +69,29 @@ class Player(Obj):
 
 
     def y_colision(self):
+    
+        vsp_sign = copysign(1, self.vsp)
         if self.vsp:
             if self.vsp > 0:
-                dir = [0,3,2,3]
+                if self.colision_check(Wall, [self.bbox[0] ,
+                self.bbox[3],  self.bbox[2], self.bbox[3] + self.vsp])[0]:
+
+                    while not self.colision_check(Wall, [self.bbox[0] ,
+                    self.bbox[3],  self.bbox[2], self.bbox[3] + vsp_sign])[0]:
+
+                        self.move(y = self.y + vsp_sign)
+                        
+                    self.vsp = 0
+
             else:
-                dir = [0,1,2,1] 
+                if self.colision_check(Wall, [self.bbox[0] ,
+                self.bbox[1] + self.vsp,  self.bbox[2], self.bbox[1]])[0]:
 
-            vsp_sign = copysign(1, self.vsp)
+                    while not self.colision_check(Wall, [self.bbox[0] ,
+                    self.bbox[1] + vsp_sign,  self.bbox[2], self.bbox[1]])[0]:
 
-            if self.colision_check(Wall, [self.bbox[dir[0]] ,
-            self.bbox[dir[1]] + -vsp_sign, self.bbox[dir[2]], self.bbox[dir[3]] + int(self.vsp)+vsp_sign])[0]:
+                        self.move(y = self.y + vsp_sign)
 
-                while not self.colision_check(Wall, [self.bbox[dir[0]] ,
-                self.bbox[dir[1]], self.bbox[dir[2]], self.bbox[dir[3]] + vsp_sign])[0]:
+                    self.vsp = 0
 
-                    self.move(y = self.y + vsp_sign)
-                self.vsp = 0 
+            
