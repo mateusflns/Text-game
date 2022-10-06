@@ -1,13 +1,11 @@
-
-
-
 class Obj:
     '''
     Base object to be inherited from
     '''
 
-    def __init__(self, x : int, y : int, graphic_engine, sprite_path = '', bbox = []):
-
+    def __init__(self, x : int = None, y : int = None, graphic_engine = None, sprite_path = '', bbox = [], exists = True):
+        if not exists:
+            return
         # basic variable assignment 
         self.sprite_path = sprite_path
         self.load_sprite()
@@ -74,14 +72,14 @@ class Obj:
         if not type(bbox2) == list:
             
             # loop through all objects
+            
             for i in Engine.instances:
                 
                 # check if the object is the same as given          check if the object isn't itself
-                objname = str(i).split(' ')[0].split('.')[2]
-                if i.__class__.__name__ == objname and i != self:
-                    
+
+                #objname = str(bbox2).split('.')[2].split("'")[0]  
+                if type(i) is type(bbox2(exists = False)) and i != self:
                     #check for colision   
-                     
                     if self.colision_check(i.bbox, bbox1)[0]:
                         return [True, i.id]
             
@@ -91,7 +89,6 @@ class Obj:
         # if bbox 1 is not given use the object's bbox
         if not bbox1:
             bbox1 = self.bbox
-
 
         # calculate width and height of the bounding boxes
         b1width = bbox1[2] - bbox1[0]
@@ -146,24 +143,29 @@ class Engine():
     '''
     def __init__(self, graphic_engine, tsize, background_sprite = ''):
         
-        # list of all the objects that should be drawn and 
+        # list of all the objects that should be drawn and run
         Engine.instances = []
         self.graphic_engine = graphic_engine
-    
+        print('engine started')
         # size of screen and map loading
         Engine.tsize = tsize
-
+        Engine.running = False
 
     def run(self):
         
         # run all the objects and graphics
         self.graphic_engine.clear()
-
         for obj in Engine.instances:
 
             obj.run()
             obj.update_bbox()
             obj.draw_sprite()
-        
+            
+            
         self.graphic_engine.draw_map()
 
+
+
+    def stop_engine(self):
+        Engine.instances = []
+        Engine.running = False

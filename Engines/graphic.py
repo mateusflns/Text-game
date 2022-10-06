@@ -120,12 +120,12 @@ class Char_map():
         self.draw_polyline([cd1, [cd1[0], cd2[1]], cd2, [cd2[0], cd1[1]], cd1], char)
 
 
-    def draw_polyline(self, coords : list, char) -> None:
+    def draw_polyline(self, cds : list, char) -> None:
         '''
         Draws a polyline from coords
         '''
-        for i in range(len(coords)-1):
-            self.draw_line(coords[i], coords[i+1], char)
+        for i in range(len(cds)-1):
+            self.draw_line(cds[i], cds[i+1], char)
 
 
     def draw_text(self,cds, text : str) -> None:
@@ -143,9 +143,11 @@ class Char_map():
         '''
         xoffset = 0
         yoffset = 0
+        #print('drawing')
         for line in sprite:
             for char in line:
                 if not char in ' \n':
+                    #print(char, cds[0]+xoffset, cds[1]+yoffset)
                     self.change_char(cds[0]+xoffset, cds[1]+yoffset, char)
                 xoffset += 1
             yoffset += 1
@@ -158,7 +160,7 @@ class Char_map():
         Changes char at x, y to char
         '''
         if x > 0 and x < self.msize[0] and y > 0 and y < self.msize[1]:
-            self.map[y][x] = char
+            self.map[int(y)][int(x)] = char
 
 
 
